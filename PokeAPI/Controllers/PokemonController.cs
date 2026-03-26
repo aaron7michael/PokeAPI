@@ -1,0 +1,72 @@
+﻿using PokeAPI.Models;
+using PokeAPI.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace PokemonStoreApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class PokemonController : ControllerBase
+{
+    private readonly PokemonService _pokemonService;
+
+    public PokemonController(PokemonService pokemonService) =>
+        _pokemonService = pokemonService;
+
+    [HttpGet]
+    public async Task<List<Pokemon>> Get() =>
+        await _pokemonService.GetAsync();
+
+    [HttpGet("{id:length(24)}")]
+    public async Task<ActionResult<Pokemon>> Get(string id)
+    {
+        var pokemon = await _pokemonService.GetAsync(id);
+
+        if (pokemon is null)
+        {
+            return NotFound();
+        }
+
+        return pokemon;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Post(Pokemon newPokemon)
+    {
+        await _pokemonService.CreateAsync(newPokemon);
+
+        return CreatedAtAction(nameof(Get), new { id = newPokemon.Id }, newPokemon);
+    }
+
+    [HttpPut("{id:length(24)}")]
+    public async Task<IActionResult> Update(string id, Pokemon updatedPokemon)
+    {
+        var pokemon = await _pokemonService.GetAsync(id);
+
+        if (pokemon is null)
+        {
+            return NotFound();
+        }
+
+        updatedPokemon.Id = pokemon.Id;
+
+        await _pokemonService.UpdateAsync(id, updatedPokemon);
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id:length(24)}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        var pokemon = await _pokemonService.GetAsync(id);
+
+        if (pokemon is null)
+        {
+            return NotFound();
+        }
+
+        await _pokemonService.RemoveAsync(id);
+
+        return NoContent();
+    }
+}
