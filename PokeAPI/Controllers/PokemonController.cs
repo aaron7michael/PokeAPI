@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace PokemonStoreApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("/[controller]")]
 public class PokemonController : ControllerBase
 {
     private readonly PokemonService _pokemonService;
