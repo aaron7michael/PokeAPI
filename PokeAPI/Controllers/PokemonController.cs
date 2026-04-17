@@ -8,19 +8,19 @@ namespace PokemonStoreApi.Controllers;
 [Route("/[controller]")]
 public class PokemonController : ControllerBase
 {
-    private readonly PokemonService _pokemonService;
+    private readonly PokeAPIService _service;
 
-    public PokemonController(PokemonService pokemonService) =>
-        _pokemonService = pokemonService;
+    public PokemonController(PokeAPIService pokemonService) =>
+        _service = pokemonService;
 
     [HttpGet]
     public async Task<List<Pokemon>> Get() =>
-        await _pokemonService.GetAsync();
+        await _service.GetPokemonAsync();
 
     [HttpGet("{id:length(24)}")]
     public async Task<ActionResult<Pokemon>> Get(string id)
     {
-        var pokemon = await _pokemonService.GetAsync(id);
+        var pokemon = await _service.GetPokemonAsync(id);
 
         if (pokemon is null)
         {
@@ -30,43 +30,43 @@ public class PokemonController : ControllerBase
         return pokemon;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Post(Pokemon newPokemon)
-    {
-        await _pokemonService.CreateAsync(newPokemon);
+    //[HttpPost]
+    //public async Task<IActionResult> Post(Pokemon newPokemon)
+    //{
+    //    await _pokemonService.CreateAsync(newPokemon);
 
-        return CreatedAtAction(nameof(Get), new { id = newPokemon.Id }, newPokemon);
-    }
+    //    return CreatedAtAction(nameof(Get), new { id = newPokemon.Id }, newPokemon);
+    //}
 
-    [HttpPut("{id:length(24)}")]
-    public async Task<IActionResult> Update(string id, Pokemon updatedPokemon)
-    {
-        var pokemon = await _pokemonService.GetAsync(id);
+    //[HttpPut("{id:length(24)}")]
+    //public async Task<IActionResult> Update(string id, Pokemon updatedPokemon)
+    //{
+    //    var pokemon = await _pokemonService.GetAsync(id);
 
-        if (pokemon is null)
-        {
-            return NotFound();
-        }
+    //    if (pokemon is null)
+    //    {
+    //        return NotFound();
+    //    }
 
-        updatedPokemon.Id = pokemon.Id;
+    //    updatedPokemon.Id = pokemon.Id;
 
-        await _pokemonService.UpdateAsync(id, updatedPokemon);
+    //    await _pokemonService.UpdateAsync(id, updatedPokemon);
 
-        return NoContent();
-    }
+    //    return NoContent();
+    //}
 
-    [HttpDelete("{id:length(24)}")]
-    public async Task<IActionResult> Delete(string id)
-    {
-        var pokemon = await _pokemonService.GetAsync(id);
+    //[HttpDelete("{id:length(24)}")]
+    //public async Task<IActionResult> Delete(string id)
+    //{
+    //    var pokemon = await _pokemonService.GetAsync(id);
 
-        if (pokemon is null)
-        {
-            return NotFound();
-        }
+    //    if (pokemon is null)
+    //    {
+    //        return NotFound();
+    //    }
 
-        await _pokemonService.RemoveAsync(id);
+    //    await _pokemonService.RemoveAsync(id);
 
-        return NoContent();
-    }
+    //    return NoContent();
+    //}
 }

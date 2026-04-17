@@ -7,9 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<PokeAPIDatabaseSettings>(
     builder.Configuration.GetSection("PokeAPIDatabase"));
 
-builder.Services.AddSingleton<PokemonService>();
-
-builder.Services.AddSingleton<MoveService>();
+builder.Services.AddSingleton<PokeAPIService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

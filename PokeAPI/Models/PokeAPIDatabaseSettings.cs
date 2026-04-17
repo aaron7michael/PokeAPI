@@ -6,6 +6,7 @@
         public string DatabaseName { get; set; } = null!;
         public string PokemonCollectionName { get; set; } = null!;
         public string MoveCollectionName { get; set; } = null!;
+        public string BattleCollectionName { get; set; } = null!;
 
     }
 }
