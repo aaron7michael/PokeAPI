@@ -29,22 +29,33 @@ namespace PokeAPI.Services
                 pokeAPIDatabaseSettings.Value.BattleCollectionName);
         }
         public async Task<List<Pokemon>> GetPokemonAsync() =>
-        await _pokemonCollection.Find(_ => true).ToListAsync();
+            await _pokemonCollection.Find(_ => true).ToListAsync();
 
-        public async Task<Pokemon?> GetPokemonAsync(string id) =>
-            await _pokemonCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        public async Task<Pokemon?> GetPokemonAsync(string name) =>
+            await _pokemonCollection.Find(x => x.Name == name).FirstOrDefaultAsync();
         
         public async Task<List<Move>> GetMoveAsync() =>
-        await _moveCollection.Find(_ => true).ToListAsync();
+            await _moveCollection.Find(_ => true).ToListAsync();
         
         public async Task<Move?> GetMoveAsync(string id) =>
             await _moveCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         public async Task<List<Battle>> GetBattleAsync() =>
-        await _battleCollection.Find(_ => true).ToListAsync();
+            await _battleCollection.Find(_ => true).ToListAsync();
 
         public async Task<Battle?> GetBattleAsync(string id) =>
             await _battleCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        public async Task CreateBattleAsync(Battle battle) =>
+            await _battleCollection.InsertOneAsync(battle);
+
+        internal async Task<Pokemon?> GetPokemonRandomPokemonAsync()
+        {
+            var allPokemon = await GetPokemonAsync();
+            Random rand = new Random();
+            int index = rand.Next(allPokemon.Count);
+
+            return allPokemon.Count > 0 ? allPokemon[index] : null;
+        }
 
         //public async Task CreateAsync(Pokemon newPokemon) =>
         //    await _pokemonCollection.InsertOneAsync(newPokemon);

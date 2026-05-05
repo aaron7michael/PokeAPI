@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace PokeAPI.Models
 {
@@ -12,5 +13,11 @@ namespace PokeAPI.Models
         public required Pokemon OpponentPokemon { get; set; }
         public bool IsFinished { get; set; } = false;
         public bool IsPlayerVictorious { get; set; }
+        
+        public Battle()
+        {
+            IsFinished = false;
+            IsPlayerVictorious = false;
+        }
     }
 }

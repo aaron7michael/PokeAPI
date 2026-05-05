@@ -2,7 +2,7 @@
 using PokeAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace PokemonStoreApi.Controllers;
+namespace PokeAPI.Controllers;
 
 [ApiController]
 [Route("/[controller]")]
