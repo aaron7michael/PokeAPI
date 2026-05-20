@@ -40,11 +40,15 @@ namespace PokeAPI.Services
         public async Task<Move?> GetMoveAsync(string id) =>
             await _moveCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
+        public async Task<Move?> GetMoveByNameAsync(string name) =>
+            await _moveCollection.Find(x => x.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
+
         public async Task<List<Battle>> GetBattleAsync() =>
             await _battleCollection.Find(_ => true).ToListAsync();
 
         public async Task<Battle?> GetBattleAsync(string id) =>
             await _battleCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+
         public async Task CreateBattleAsync(Battle battle) =>
             await _battleCollection.InsertOneAsync(battle);
 
@@ -57,8 +61,24 @@ namespace PokeAPI.Services
             return allPokemon.Count > 0 ? allPokemon[index] : null;
         }
 
-        //public async Task CreateAsync(Pokemon newPokemon) =>
-        //    await _pokemonCollection.InsertOneAsync(newPokemon);
+        public async Task CreatePokemonAsync(Pokemon newPokemon)
+        {
+            // check moves and create if move doesn't exist
+            for(int i = 0; i < newPokemon.Moves.Length; i++)
+            {
+                Move? existingMove = await GetMoveByNameAsync(newPokemon.Moves[i].Name);
+                if (existingMove == null)
+                {
+                    await _moveCollection.InsertOneAsync(newPokemon.Moves[i]);
+                }
+                else
+                {
+                    newPokemon.Moves[i] = existingMove;
+                }
+            }
+            await _pokemonCollection.InsertOneAsync(newPokemon);
+        }
+            
 
         //public async Task UpdateAsync(string id, Pokemon updatedPokemon) =>
         //    await _pokemonCollection.ReplaceOneAsync(x => x.Id == id, updatedPokemon);
@@ -66,5 +86,4 @@ namespace PokeAPI.Services
         //public async Task RemoveAsync(string id) =>
         //    await _pokemonCollection.DeleteOneAsync(x => x.Id == id);
     }
-}
 }

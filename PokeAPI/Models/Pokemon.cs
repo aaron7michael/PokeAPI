@@ -16,7 +16,7 @@ namespace PokeAPI.Models
         public int SPAttack {  get; set; }
         public int SPDefense { get; set; }
         public int Speed { get; set; }
-        public Move[] moves { get; set; }
+        public Move[] Moves { get; set; }
 
     }
 }

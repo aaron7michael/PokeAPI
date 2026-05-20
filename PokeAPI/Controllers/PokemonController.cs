@@ -30,13 +30,13 @@ public class PokemonController : ControllerBase
         return pokemon;
     }
 
-    //[HttpPost]
-    //public async Task<IActionResult> Post(Pokemon newPokemon)
-    //{
-    //    await _pokemonService.CreateAsync(newPokemon);
+    [HttpPost]
+    public async Task<IActionResult> Post(Pokemon newPokemon)
+    {
+        await _service.CreatePokemonAsync(newPokemon);
 
-    //    return CreatedAtAction(nameof(Get), new { id = newPokemon.Id }, newPokemon);
-    //}
+        return CreatedAtAction(nameof(Get), new { id = newPokemon.Id }, newPokemon);
+    }
 
     //[HttpPut("{id:length(24)}")]
     //public async Task<IActionResult> Update(string id, Pokemon updatedPokemon)
