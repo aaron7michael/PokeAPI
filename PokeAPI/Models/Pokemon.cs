@@ -18,5 +18,27 @@ namespace PokeAPI.Models
         public int Speed { get; set; }
         public Move[] Moves { get; set; }
 
+        public Pokemon(PokemonDTO dto)
+        {
+            if (dto.Types.Length > 2 || dto.Types.Length == 0)
+            {
+                throw new ArgumentException("A Pokemon must have 1 or 2 types.");
+            }
+            if(dto.Moves.Length > 4 || dto.Moves.Length == 0)
+            {
+                throw new ArgumentException("A Pokemon must have 1 to 4 moves.");
+            }
+
+            Name = dto.Name;
+            Types = dto.Types;
+            Status = dto.Status;
+            HP = dto.HP;
+            Attack = dto.Attack;
+            Defense = dto.Defense;
+            SPAttack = dto.SPAttack;
+            SPDefense = dto.SPDefense;
+            Speed = dto.Speed;
+            Moves = new Move[dto.Moves.Length];
+        }
     }
 }
