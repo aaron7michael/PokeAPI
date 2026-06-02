@@ -1,7 +1,9 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using static PokeAPI.StatusEffects;
 namespace PokeAPI.Models
 {
+    
     public class Pokemon
     {
         [BsonId]
@@ -13,10 +15,12 @@ namespace PokeAPI.Models
         public int HP { get; set; }
         public int Attack { get; set; }
         public int Defense { get; set; }
-        public int SPAttack {  get; set; }
+        public int SPAttack { get; set; }
         public int SPDefense { get; set; }
         public int Speed { get; set; }
         public Move[] Moves { get; set; }
+
+        public StatusEffect? ApplyStatusEffect { get; set; }
 
         public Pokemon(PokemonDTO dto)
         {
@@ -24,7 +28,7 @@ namespace PokeAPI.Models
             {
                 throw new ArgumentException("A Pokemon must have 1 or 2 types.");
             }
-            if(dto.Moves.Length > 4 || dto.Moves.Length == 0)
+            if (dto.Moves.Length > 4 || dto.Moves.Length == 0)
             {
                 throw new ArgumentException("A Pokemon must have 1 to 4 moves.");
             }
@@ -40,5 +44,6 @@ namespace PokeAPI.Models
             Speed = dto.Speed;
             Moves = new Move[dto.Moves.Length];
         }
+        
     }
 }
