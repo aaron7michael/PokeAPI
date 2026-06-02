@@ -20,8 +20,6 @@ namespace PokeAPI.Models
         public int Speed { get; set; }
         public Move[] Moves { get; set; }
 
-        public StatusEffect? ApplyStatusEffect { get; set; }
-
         public Pokemon(PokemonDTO dto)
         {
             if (dto.Types.Length > 2 || dto.Types.Length == 0)
@@ -44,6 +42,5 @@ namespace PokeAPI.Models
             Speed = dto.Speed;
             Moves = new Move[dto.Moves.Length];
         }
-        
     }
 }

@@ -9,8 +9,8 @@ namespace PokeAPI.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
-        public required Pokemon PlayerPokemon { get; set; }
-        public required Pokemon OpponentPokemon { get; set; }
+        public required PokemonDTO PlayerPokemon { get; set; }
+        public required PokemonDTO OpponentPokemon { get; set; }
         public bool IsFinished { get; set; } = false;
         public bool IsPlayerVictorious { get; set; }
         

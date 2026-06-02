@@ -42,5 +42,69 @@ namespace PokeAPI.Controllers
         {
             throw new NotImplementedException();
         }
+        private PokemonDTO Burn(PokemonDTO pokemon)
+        {
+            PokemonDTO newPokemonDTO = new PokemonDTO(pokemon);
+            // Burn status effect logic
+            // For example, reduce HP by 5% each turn and reduce Attack by 50%
+            newPokemonDTO.HP = (int)(newPokemonDTO.HP * 0.95);
+            // newPokemonDTO.Attack = (int)(newPokemonDTO.Attack * 0.5);
+            return newPokemonDTO;
+        }
+        public PokemonDTO Paralyze(PokemonDTO pokemon)
+        {
+            PokemonDTO newPokemonDTO = new PokemonDTO(pokemon);
+            // Paralyze status effect logic
+            // For example, reduce Speed by 50% and have a 25% chance to be unable to move each turn
+            newPokemonDTO.Speed = (int)(newPokemonDTO.Speed * 0.5);
+            Random rand = new Random();
+            if (rand.Next(100) < 25)
+            {
+                // Pokemon is unable to move this turn
+                Console.WriteLine($"{pokemon.Name} is paralyzed and can't move!");
+            }
+            return newPokemonDTO;
+        }
+        public void Poison(Pokemon pokemon)
+        {
+            // Poison status effect logic
+            // For example, reduce HP by 5% each turn
+            pokemon.HP = (int)(pokemon.HP * 0.95);
+        }
+        public void Sleep(Pokemon pokemon)
+        {
+            // Sleep status effect logic
+            // For example, have a 50% chance to wake up each turn
+            Random rand = new Random();
+            if (rand.Next(100) < 50)
+            {
+                // Pokemon wakes up
+                Console.WriteLine($"{pokemon.Name} woke up!");
+                pokemon.ApplyStatusEffect = null; // Clear the status effect
+            }
+            else
+            {
+                // Pokemon is still asleep
+                Console.WriteLine($"{pokemon.Name} is still asleep.");
+            }
+        }
+        public void Freeze(Pokemon pokemon)
+        {
+            // Freeze status effect logic
+            // For example, have a 20% chance to thaw out each turn
+            Random rand = new Random();
+            if (rand.Next(100) < 20)
+            {
+                // Pokemon thaws out
+                Console.WriteLine($"{pokemon.Name} thawed out!");
+                pokemon.ApplyStatusEffect = null; // Clear the status effect
+            }
+            else
+            {
+                // Pokemon is still frozen
+                Console.WriteLine($"{pokemon.Name} is still frozen.");
+            }
+        }
     }
+}
 }

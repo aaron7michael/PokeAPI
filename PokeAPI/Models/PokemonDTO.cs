@@ -5,9 +5,6 @@ namespace PokeAPI.Models
 {
     public class PokemonDTO
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
         public string Name { get; set; }
         public string[] Types { get; set; }
         public string Status { get; set; } = "healthy";
@@ -18,5 +15,19 @@ namespace PokeAPI.Models
         public int SPDefense { get; set; }
         public int Speed { get; set; }
         public string[] Moves { get; set; }
+
+        public PokemonDTO (PokemonDTO pokemonDTO)
+        {
+            Name = pokemonDTO.Name;
+            Types = pokemonDTO.Types;
+            Status = pokemonDTO.Status;
+            HP = pokemonDTO.HP;
+            Attack = pokemonDTO.Attack;
+            Defense = pokemonDTO.Defense;
+            SPAttack = pokemonDTO.SPAttack;
+            SPDefense = pokemonDTO.SPDefense;
+            Speed = pokemonDTO.Speed;
+            Moves = pokemonDTO.Moves;
+        }
     }
 }
