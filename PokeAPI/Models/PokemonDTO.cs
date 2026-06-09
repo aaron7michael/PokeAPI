@@ -29,5 +29,17 @@ namespace PokeAPI.Models
             Speed = pokemonDTO.Speed;
             Moves = pokemonDTO.Moves;
         }
+        public PokemonDTO(Pokemon pokemon)
+        {
+            Name = pokemon.Name;
+            Types = pokemon.Types;
+            HP = pokemon.HP;
+            Attack = pokemon.Attack;
+            Defense = pokemon.Defense;
+            SPAttack = pokemon.SPAttack;
+            SPDefense = pokemon.SPDefense;
+            Speed = pokemon.Speed;
+            Moves = pokemon.Moves.Select(m => m.Name).ToArray();
+        }
     }
 }

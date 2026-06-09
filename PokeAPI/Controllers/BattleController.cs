@@ -32,7 +32,7 @@ namespace PokeAPI.Controllers
                 return BadRequest("Pokemon not found");
             }
 
-            var Battle = new Battle { PlayerPokemon = playerPokemon, OpponentPokemon = opponentPokemon };
+            var Battle = new Battle(playerPokemon,opponentPokemon );
             _service.CreateBattleAsync(Battle);
             
             throw new NotImplementedException();
@@ -80,7 +80,6 @@ namespace PokeAPI.Controllers
             {
                 // Pokemon wakes up
                 Console.WriteLine($"{pokemon.Name} woke up!");
-                pokemon.ApplyStatusEffect = null; // Clear the status effect
             }
             else
             {
@@ -97,7 +96,6 @@ namespace PokeAPI.Controllers
             {
                 // Pokemon thaws out
                 Console.WriteLine($"{pokemon.Name} thawed out!");
-                pokemon.ApplyStatusEffect = null; // Clear the status effect
             }
             else
             {
@@ -107,4 +105,4 @@ namespace PokeAPI.Controllers
         }
     }
 }
-}
+

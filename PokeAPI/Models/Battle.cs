@@ -9,17 +9,29 @@ namespace PokeAPI.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
-        public required PokemonDTO PlayerPokemon { get; set; }
-        public required MoveDTO[] PlayerMoves { get; set; }
-        public required PokemonDTO OpponentPokemon { get; set; }
-        public required MoveDTO[] OpponentMoves { get; set; }
+        public PokemonDTO PlayerPokemon { get; set; }
+        public MoveDTO[] PlayerMoves { get; set; }
+        public PokemonDTO OpponentPokemon { get; set; }
+        public MoveDTO[] OpponentMoves { get; set; }
         public bool IsFinished { get; set; } = false;
         public bool IsPlayerVictorious { get; set; }
         
-        public Battle()
+        public Battle(Pokemon playerPokemon, Pokemon opponentPokemon)
         {
-            IsFinished = false;
-            IsPlayerVictorious = false;
+            PlayerPokemon = new PokemonDTO(playerPokemon);
+            OpponentPokemon = new PokemonDTO(opponentPokemon);
+            PlayerMoves = [];
+            OpponentMoves = [];
+
+            foreach(Move move in playerPokemon.Moves)
+            {
+                PlayerMoves = PlayerMoves.Append(new MoveDTO(move)).ToArray();
+            }
+
+            foreach(Move move in opponentPokemon.Moves)
+            {
+                OpponentMoves = OpponentMoves.Append(new MoveDTO(move)).ToArray();
+            }
         }
     }
 }

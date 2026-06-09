@@ -17,10 +17,10 @@ public class PokemonController : ControllerBase
     public async Task<List<Pokemon>> Get() =>
         await _service.GetPokemonAsync();
 
-    [HttpGet("{id:length(24)}")]
-    public async Task<ActionResult<Pokemon>> Get(string id)
+    [HttpGet("{name}")]
+    public async Task<ActionResult<Pokemon>> Get(string name)
     {
-        var pokemon = await _service.GetPokemonAsync(id);
+        var pokemon = await _service.GetPokemonAsync(name);
 
         if (pokemon is null)
         {
@@ -31,11 +31,11 @@ public class PokemonController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(Pokemon newPokemon)
+    public async Task<IActionResult> Post(PokemonDTO newPokemon)
     {
         await _service.CreatePokemonAsync(newPokemon);
 
-        return CreatedAtAction(nameof(Get), new { id = newPokemon.Id }, newPokemon);
+        return CreatedAtAction(nameof(Get), new { name = newPokemon.Name }, newPokemon);
     }
 
     //[HttpPut("{id:length(24)}")]

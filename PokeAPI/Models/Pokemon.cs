@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using static PokeAPI.StatusEffects;
 namespace PokeAPI.Models
 {
     
@@ -29,6 +28,13 @@ namespace PokeAPI.Models
             if (dto.Moves.Length > 4 || dto.Moves.Length == 0)
             {
                 throw new ArgumentException("A Pokemon must have 1 to 4 moves.");
+            }
+            foreach(string type in dto.Types)
+            {
+                if (!PokeType.IsValidType(type))
+                {
+                    throw new ArgumentException($"Invalid Pokemon type: {type}");
+                }
             }
 
             Name = dto.Name;

@@ -2,14 +2,14 @@
 {
     public class MoveDTO
     {
-        public required string Name { get; set; }
+        public string Name { get; set; }
         public string Type { get; set; }
         public string StatusEffect { get; set; } = null!;
         public int? StatusChance { get; set; } = null!;
-        public required int Attack { get; set; }
-        public required int Accuracy { get; set; }
-        public required int PP { get; set; }
-        public required bool isSpecialAttack { get; set; }
+        public int Attack { get; set; }
+        public int Accuracy { get; set; }
+        public int PP { get; set; }
+        public bool isSpecialAttack { get; set; }
 
         public MoveDTO(Move move)
         {
