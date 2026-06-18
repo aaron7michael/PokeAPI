@@ -5,6 +5,9 @@ namespace PokeAPI.Models
 {
     public abstract class PokeType
     {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? Id { get; set; }
         public string Name { get; set; }
         public string[] Strengths { get; set; }
         public string[] Weaknesses { get; set; }

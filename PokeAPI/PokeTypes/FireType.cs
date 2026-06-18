@@ -2,9 +2,9 @@
 
 namespace PokeAPI.PokeTypes
 {
-    public class Fire : PokeType
+    internal class FireType : PokeType
     {
-        public Fire()
+        public FireType()
         {
             Name = "Fire";
             Strengths = ["Grass", "Ice", "Bug", "Steel"];

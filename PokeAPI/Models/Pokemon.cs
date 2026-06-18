@@ -9,7 +9,8 @@ namespace PokeAPI.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
         public string Name { get; set; }
-        public string[] Types { get; set; }
+        [BsonSerializer(typeof(PokeTypeSerializer))]
+        public PokeType[] Types { get; set; }
         public string Status { get; set; } = "healthy";
         public int HP { get; set; }
         public int Attack { get; set; }
@@ -38,7 +39,7 @@ namespace PokeAPI.Models
             }
 
             Name = dto.Name;
-            Types = dto.Types;
+            Types = dto.Types.Select(t => PokeType.FromName(t)).ToArray();
             Status = dto.Status;
             HP = dto.HP;
             Attack = dto.Attack;
