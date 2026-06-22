@@ -2,12 +2,12 @@
 
 namespace PokeAPI.PokeTypes
 {
-    internal class FireType : PokeType
+    internal sealed class FireType : PokeType
     {
         public FireType()
         {
             Name = "Fire";
-            Strengths = ["Grass", "Ice", "Bug", "Steel"];
+            Resistances = ["Grass", "Ice", "Bug", "Steel", "Fairy", "Fire"];
             Weaknesses = ["Water", "Ground", "Rock"];
             NoEffect = [];
         }

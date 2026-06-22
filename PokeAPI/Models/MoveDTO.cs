@@ -14,7 +14,7 @@
         public MoveDTO(Move move)
         {
             Name = move.Name;
-            Type = move.Type;
+            Type = move.Type.Name;
             StatusEffect = move.StatusEffect;
             StatusChance = move.StatusChance;
             Attack = move.Attack;

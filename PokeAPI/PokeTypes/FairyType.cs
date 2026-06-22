@@ -1,6 +1,13 @@
 ﻿namespace PokeAPI.Models
 {
-    internal class FairyType : PokeType
+    internal sealed class FairyType : PokeType
     {
+        public FairyType() 
+        {
+            Name = "Fairy";
+            Resistances = [ "Fighting", "Bug", "Dark" ];
+            Weaknesses = [ "Poison", "Steel" ];
+            NoEffect = [ "Dragon" ];
+        }
     }
 }

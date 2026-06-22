@@ -5,7 +5,7 @@
         public NormalType()
         {
             Name = "Normal";
-            Strengths = [];
+            Resistances = [];
             Weaknesses = ["Fighting"];
             NoEffect = ["Ghost"];
         }

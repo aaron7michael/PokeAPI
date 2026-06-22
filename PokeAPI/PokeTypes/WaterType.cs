@@ -1,6 +1,13 @@
 ﻿namespace PokeAPI.Models
 {
-    internal class WaterType : PokeType
+    internal sealed class WaterType : PokeType
     {
+        public WaterType()
+        {
+            Name = "Water";
+            Resistances = [ "Fire", "Water", "Ice", "Steel" ];
+            Weaknesses = [ "Grass", "Electric" ];
+            NoEffect = [ ];
+        }
     }
 }

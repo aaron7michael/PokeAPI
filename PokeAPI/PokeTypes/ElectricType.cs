@@ -1,6 +1,13 @@
 ﻿namespace PokeAPI.Models
 {
-    internal class ElectricType : PokeType
+    internal sealed class ElectricType : PokeType
     {
+        public ElectricType() 
+        {
+            Name = "Electric";
+            Resistances = [ "Electric", "Flying", "Steel" ];
+            Weaknesses = [ "Ground" ];
+            NoEffect = [ ];
+        }
     }
 }

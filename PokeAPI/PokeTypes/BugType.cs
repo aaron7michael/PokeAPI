@@ -1,11 +1,11 @@
 ﻿namespace PokeAPI.Models
 {
-    internal class BugType : PokeType
+    internal sealed class BugType : PokeType
     {
         public BugType() 
         {
             Name = "Bug";
-            Strengths = ["Grass", "Psychic", "Dark"];
+            Resistances = ["Grass", "Fighting", "Ground"];
             Weaknesses = ["Fire", "Flying", "Rock"];
             NoEffect = [];
         }

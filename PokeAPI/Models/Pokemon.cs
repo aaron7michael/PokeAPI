@@ -39,7 +39,7 @@ namespace PokeAPI.Models
             }
 
             Name = dto.Name;
-            Types = dto.Types.Select(t => PokeType.FromName(t)).ToArray();
+            Types = dto.Types.Select(PokeType.GetPokeTypeFromName).ToArray();
             Status = dto.Status;
             HP = dto.HP;
             Attack = dto.Attack;

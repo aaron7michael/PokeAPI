@@ -5,7 +5,7 @@
         public PsychicType() 
         {
             Name = "Psychic";
-            Strengths = ["Fighting", "Poison"];
+            Resistances = ["Fighting", "Poison"];
             Weaknesses = ["Bug", "Ghost", "Dark"];
             NoEffect = ["Dark"];
         }
