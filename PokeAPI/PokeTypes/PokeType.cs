@@ -71,7 +71,35 @@ namespace PokeAPI.Models
 
         public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, PokeType value)
         {
+            context.Writer.WriteStartDocument();
+            context.Writer.WriteName("Name");
             context.Writer.WriteString(value.Name);
+
+            context.Writer.WriteName("Resistances");
+            context.Writer.WriteStartArray();
+            foreach (string resistance in value.Resistances)
+            {
+                context.Writer.WriteString(resistance);
+            }
+            context.Writer.WriteEndArray();
+
+            context.Writer.WriteName("Weaknesses");
+            context.Writer.WriteStartArray();
+            foreach (string weakness in value.Weaknesses)
+            {
+                context.Writer.WriteString(weakness);
+            }
+            context.Writer.WriteEndArray();
+
+            context.Writer.WriteName("NoEffect");
+            context.Writer.WriteStartArray();
+            foreach (string noEffect in value.NoEffect)
+            {
+                context.Writer.WriteString(noEffect);
+            }
+            context.Writer.WriteEndArray();
+
+            context.Writer.WriteEndDocument();
         }
 
         public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, object value)

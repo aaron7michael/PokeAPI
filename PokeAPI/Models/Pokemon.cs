@@ -1,5 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices.Swift;
 namespace PokeAPI.Models
 {
     
@@ -22,14 +24,6 @@ namespace PokeAPI.Models
 
         public Pokemon(PokemonDTO dto)
         {
-            if (dto.Types.Length > 2 || dto.Types.Length == 0)
-            {
-                throw new ArgumentException("A Pokemon must have 1 or 2 types.");
-            }
-            if (dto.Moves.Length > 4 || dto.Moves.Length == 0)
-            {
-                throw new ArgumentException("A Pokemon must have 1 to 4 moves.");
-            }
             foreach(string type in dto.Types)
             {
                 if (!PokeType.IsValidType(type))
@@ -48,6 +42,20 @@ namespace PokeAPI.Models
             SPDefense = dto.SPDefense;
             Speed = dto.Speed;
             Moves = new Move[dto.Moves.Length];
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            List<ValidationResult> results = [];
+            if (Types.Length > 2 || Types.Length == 0)
+            {
+                results.Add(new ValidationResult("A Pokemon must have 1 or 2 types.", [nameof(Types)]));
+            }
+            if (Moves.Length > 4 || Moves.Length == 0)
+            {
+                results.Add(new ValidationResult("A Pokemon must have 1 to 4 moves.", [nameof(Moves)]));
+            }
+            return results;
         }
     }
 }

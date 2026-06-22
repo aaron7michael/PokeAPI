@@ -27,11 +27,11 @@ public class PokemonController : ControllerBase
             return NotFound();
         }
 
-        return pokemon;
+        return Ok(pokemon);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(PokemonDTO newPokemon)
+    public async Task<ActionResult<Pokemon>> Post(PokemonDTO newPokemon)
     {
         await _service.CreatePokemonAsync(newPokemon);
 
