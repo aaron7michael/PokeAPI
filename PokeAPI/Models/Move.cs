@@ -24,7 +24,7 @@ namespace PokeAPI.Models
         {
             string[] allowedStatuses = { "burn", "freeze", "paralyze", "poison", "sleep" };
             List<ValidationResult> results = [];
-            if (!PokeType.IsValidType(Type))
+            if (!PokeType.IsValidType(validationContext.Items["Type"].ToString()))
             {
                 results.Add(new ValidationResult($"Invalid type: {Type}", [nameof(Type)]));
             }

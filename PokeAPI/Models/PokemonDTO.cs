@@ -32,7 +32,7 @@ namespace PokeAPI.Models
         public PokemonDTO(Pokemon pokemon)
         {
             Name = pokemon.Name;
-            Types = pokemon.Types;
+            Types = [.. pokemon.Types.Select(t => t.Name)];
             HP = pokemon.HP;
             Attack = pokemon.Attack;
             Defense = pokemon.Defense;

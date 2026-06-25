@@ -1,4 +1,6 @@
-﻿using MongoDB.Bson.Serialization;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.IO;
+using MongoDB.Bson.Serialization;
 using PokeAPI.PokeTypes;
 
 namespace PokeAPI.Models
@@ -66,40 +68,108 @@ namespace PokeAPI.Models
 
         public PokeType Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
-            return PokeType.GetPokeTypeFromName(context.Reader.ReadString());
+
+            return PokeType.GetPokeTypeFromName(context.Reader.ReadString("Name"));
         }
 
         public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, PokeType value)
         {
-            context.Writer.WriteStartDocument();
-            context.Writer.WriteName("Name");
-            context.Writer.WriteString(value.Name);
+            using var writer = context.Writer;
+            writer.WriteStartDocument();
+            writer.WriteName("Name");
+            writer.WriteString(value.Name);
 
-            context.Writer.WriteName("Resistances");
-            context.Writer.WriteStartArray();
+            writer.WriteName("Resistances");
+            writer.WriteStartArray();
             foreach (string resistance in value.Resistances)
             {
-                context.Writer.WriteString(resistance);
+                writer.WriteString(resistance);
             }
-            context.Writer.WriteEndArray();
+            writer.WriteEndArray();
 
-            context.Writer.WriteName("Weaknesses");
-            context.Writer.WriteStartArray();
+            writer.WriteName("Weaknesses");
+            writer.WriteStartArray();
             foreach (string weakness in value.Weaknesses)
             {
-                context.Writer.WriteString(weakness);
+                writer.WriteString(weakness);
             }
-            context.Writer.WriteEndArray();
+            writer.WriteEndArray();
 
-            context.Writer.WriteName("NoEffect");
-            context.Writer.WriteStartArray();
+            writer.WriteName("NoEffect");
+            writer .WriteStartArray();
             foreach (string noEffect in value.NoEffect)
             {
-                context.Writer.WriteString(noEffect);
+                writer.WriteString(noEffect);
             }
-            context.Writer.WriteEndArray();
+            writer.WriteEndArray();
 
-            context.Writer.WriteEndDocument();
+            writer.WriteEndDocument();
+        }
+
+        public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, object value)
+        {
+            Serialize(context, args, (PokeType)value);
+        }
+
+        object IBsonSerializer.Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
+        {
+            return Deserialize(context, args);
+        }
+    }
+
+    public class PokeTypeArraySerializer : IBsonSerializer<PokeType[]>
+    {
+        public Type ValueType => typeof(PokeType[]);
+
+        public PokeType[] Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
+        {
+            using var reader = context.Reader;
+            reader.ReadStartArray();
+            List<PokeType> pokeTypes = [];
+            while(reader.ReadBsonType() != BsonType.EndOfDocument)
+            {
+                string typeName = reader.ReadString();
+                pokeTypes.Add(PokeType.GetPokeTypeFromName(typeName));
+            }
+            reader.ReadEndArray();
+            return [.. pokeTypes];
+        }
+
+        public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, PokeType[] value)
+        {
+            using var writer = context.Writer;
+            writer.WriteStartArray();
+            foreach (PokeType pokeType in value)
+            {
+                writer.WriteStartDocument();
+                writer.WriteName("Name");
+                writer.WriteString(pokeType.Name);
+                writer.WriteName("Resistances");
+                writer.WriteStartArray();
+                foreach (string resistance in pokeType.Resistances)
+                {
+                    writer.WriteString(resistance);
+                }
+                writer.WriteEndArray();
+
+                writer.WriteName("Weaknesses");
+                writer.WriteStartArray();
+                foreach (string weakness in pokeType.Weaknesses)
+                {
+                    writer.WriteString(weakness);
+                }
+                writer.WriteEndArray();
+
+                writer.WriteName("NoEffect");
+                writer.WriteStartArray();
+                foreach (string noEffect in pokeType.NoEffect)
+                {
+                    writer.WriteString(noEffect);
+                }
+                writer.WriteEndArray();
+                writer.WriteEndDocument();
+            }
+            writer.WriteEndArray();
         }
 
         public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, object value)

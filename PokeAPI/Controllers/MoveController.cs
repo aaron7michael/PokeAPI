@@ -26,6 +26,11 @@ namespace PokeAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Move>> CreateMove(Move newMove)
         {
+            bool exists = await _service.GetMoveByNameAsync(newMove.Name) != null;
+            if (exists)
+            {
+                return BadRequest("Move with that name already exists.");
+            }
             await _service.CreateMoveAsync(newMove);
             return CreatedAtAction(nameof(Get), new { name = newMove.Name }, newMove);
         }
