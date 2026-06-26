@@ -10,16 +10,18 @@ namespace PokeAPI.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        public required string Name { get; set; }
+        public string Name { get; set; }
         [BsonSerializer(typeof(PokeTypeSerializer))]
         public PokeType Type { get; set; }
-        public string StatusEffect { get; set; } = null!;
+        public string? StatusEffect { get; set; } = null!;
+        [Range(1, 100)]
         public int? StatusChance { get; set; } = null!;
-        public required int Attack { get; set; }
-        public required int Accuracy { get; set; }
-        public required int PP { get; set; }
-        public required bool isSpecialAttack { get; set; }
-        
+        public int Attack { get; set; }
+        [Range(1, 100)]
+        public int Accuracy { get; set; }
+        public int PP { get; set; }
+        public bool isSpecialAttack { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             string[] allowedStatuses = { "burn", "freeze", "paralyze", "poison", "sleep" };

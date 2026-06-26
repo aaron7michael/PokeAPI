@@ -22,28 +22,6 @@ namespace PokeAPI.Models
         public int Speed { get; set; }
         public Move[] Moves { get; set; }
 
-        public Pokemon(PokemonDTO dto)
-        {
-            foreach(string type in dto.Types)
-            {
-                if (!PokeType.IsValidType(type))
-                {
-                    throw new ArgumentException($"Invalid Pokemon type: {type}");
-                }
-            }
-
-            Name = dto.Name;
-            Types = dto.Types.Select(PokeType.GetPokeTypeFromName).ToArray();
-            Status = dto.Status;
-            HP = dto.HP;
-            Attack = dto.Attack;
-            Defense = dto.Defense;
-            SPAttack = dto.SPAttack;
-            SPDefense = dto.SPDefense;
-            Speed = dto.Speed;
-            Moves = new Move[dto.Moves.Length];
-        }
-
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             List<ValidationResult> results = [];
