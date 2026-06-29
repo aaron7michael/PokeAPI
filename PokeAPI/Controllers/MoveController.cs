@@ -1,6 +1,7 @@
 ﻿using PokeAPI.Models;
 using PokeAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using PokeAPI.DTOs;
 namespace PokeAPI.Controllers
 {
     [ApiController]
@@ -26,7 +27,7 @@ namespace PokeAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Move>> CreateMove(MoveDTO newMoveDTO)
         {
-            Move newMove = new Move(newMoveDTO);
+            Move newMove = ModelDTOConverter.MoveFromMoveDTO(newMoveDTO);
             bool exists = await _service.GetMoveByNameAsync(newMove.Name) != null;
             if (exists)
             {

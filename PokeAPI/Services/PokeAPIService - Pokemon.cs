@@ -1,5 +1,6 @@
 ﻿using PokeAPI.Models;
 using MongoDB.Driver;
+using PokeAPI.DTOs;
 
 namespace PokeAPI.Services
 {
@@ -22,9 +23,9 @@ namespace PokeAPI.Services
 
         public async Task CreatePokemonAsync(PokemonDTO newPokemonDTO)
         {
-            Pokemon newPokemon = new Pokemon(newPokemonDTO);
-            // check moves and create if move doesn't exist
-            for(int i = 0; i < newPokemonDTO.Moves.Length; i++)
+            Pokemon newPokemon = ModelDTOConverter.PokemonFromPokemonDTO(newPokemonDTO);
+            // check moves exist and throw error if they don't
+            for (int i = 0; i < newPokemonDTO.Moves.Length; i++)
             {
                 Move? existingMove = await GetMoveByNameAsync(newPokemonDTO.Moves[i]);
                 if (existingMove == null)

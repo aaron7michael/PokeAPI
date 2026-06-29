@@ -1,6 +1,7 @@
 ﻿using PokeAPI.Models;
 using PokeAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using PokeAPI.DTOs;
 
 namespace PokeAPI.Controllers
 {
@@ -44,7 +45,7 @@ namespace PokeAPI.Controllers
         }
         private PokemonDTO Burn(PokemonDTO pokemon)
         {
-            PokemonDTO newPokemonDTO = new PokemonDTO(pokemon);
+            PokemonDTO newPokemonDTO = ModelDTOConverter.PokemonDTOFromPokemonDTO(pokemon);
             // Burn status effect logic
             // For example, reduce HP by 5% each turn and reduce Attack by 50%
             newPokemonDTO.HP = (int)(newPokemonDTO.HP * 0.95);
@@ -53,7 +54,7 @@ namespace PokeAPI.Controllers
         }
         public PokemonDTO Paralyze(PokemonDTO pokemon)
         {
-            PokemonDTO newPokemonDTO = new PokemonDTO(pokemon);
+            PokemonDTO newPokemonDTO = ModelDTOConverter.PokemonDTOFromPokemonDTO(pokemon);
             // Paralyze status effect logic
             // For example, reduce Speed by 50% and have a 25% chance to be unable to move each turn
             newPokemonDTO.Speed = (int)(newPokemonDTO.Speed * 0.5);

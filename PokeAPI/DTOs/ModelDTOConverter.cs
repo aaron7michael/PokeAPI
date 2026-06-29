@@ -39,17 +39,21 @@ namespace PokeAPI.DTOs
                 Moves = pokemonDTO.Moves,
             };
         }
-        public PokemonDTO(Pokemon pokemon)
+        public static PokemonDTO PokemonDTOFromPokemon(Pokemon pokemon)
         {
-            Name = pokemon.Name;
-            Types = [.. pokemon.Types.Select(t => t.Name)];
-            HP = pokemon.HP;
-            Attack = pokemon.Attack;
-            Defense = pokemon.Defense;
-            SPAttack = pokemon.SPAttack;
-            SPDefense = pokemon.SPDefense;
-            Speed = pokemon.Speed;
-            Moves = pokemon.Moves.Select(m => m.Name).ToArray();
+            return new PokemonDTO
+            {
+                Name = pokemon.Name,
+                Types = [.. pokemon.Types.Select(t => t.Name)],
+                Status = pokemon.Status,
+                HP = pokemon.HP,
+                Attack = pokemon.Attack,
+                Defense = pokemon.Defense,
+                SPAttack = pokemon.SPAttack,
+                SPDefense = pokemon.SPDefense,
+                Speed = pokemon.Speed,
+                Moves = [.. pokemon.Moves.Select(m => m.Name)]
+            };
         }
         public static MoveDTO MoveDTOFromMove(Move move)
         {

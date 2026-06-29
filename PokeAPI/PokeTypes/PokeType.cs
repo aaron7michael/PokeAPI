@@ -68,13 +68,13 @@ namespace PokeAPI.Models
 
         public PokeType Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
-
+            context.Reader.ReadStartDocument();
             return PokeType.GetPokeTypeFromName(context.Reader.ReadString("Name"));
         }
 
         public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, PokeType value)
         {
-            using var writer = context.Writer;
+            var writer = context.Writer;
             writer.WriteStartDocument();
             writer.WriteName("Name");
             writer.WriteString(value.Name);
@@ -123,7 +123,7 @@ namespace PokeAPI.Models
 
         public PokeType[] Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
-            using var reader = context.Reader;
+            var reader = context.Reader;
             reader.ReadStartArray();
             List<PokeType> pokeTypes = [];
             while(reader.ReadBsonType() != BsonType.EndOfDocument)
@@ -137,7 +137,7 @@ namespace PokeAPI.Models
 
         public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, PokeType[] value)
         {
-            using var writer = context.Writer;
+            var writer = context.Writer;
             writer.WriteStartArray();
             foreach (PokeType pokeType in value)
             {

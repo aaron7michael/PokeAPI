@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
+using PokeAPI.DTOs;
 
 namespace PokeAPI.Models
 {
@@ -18,20 +19,10 @@ namespace PokeAPI.Models
         
         public Battle(Pokemon playerPokemon, Pokemon opponentPokemon)
         {
-            PlayerPokemon = new PokemonDTO(playerPokemon);
-            OpponentPokemon = new PokemonDTO(opponentPokemon);
-            PlayerMoves = [];
-            OpponentMoves = [];
-
-            foreach(Move move in playerPokemon.Moves)
-            {
-                PlayerMoves = PlayerMoves.Append(new MoveDTO(move)).ToArray();
-            }
-
-            foreach(Move move in opponentPokemon.Moves)
-            {
-                OpponentMoves = OpponentMoves.Append(new MoveDTO(move)).ToArray();
-            }
+            PlayerPokemon = ModelDTOConverter.PokemonDTOFromPokemon(playerPokemon);
+            OpponentPokemon = ModelDTOConverter.PokemonDTOFromPokemon(opponentPokemon);
+            PlayerMoves = [.. playerPokemon.Moves.Select(ModelDTOConverter.MoveDTOFromMove)];
+            OpponentMoves = [.. opponentPokemon.Moves.Select(ModelDTOConverter.MoveDTOFromMove)];
         }
     }
 }
