@@ -1,7 +1,4 @@
 ﻿using PokeAPI.Models;
-using System.Collections;
-using System.Net.NetworkInformation;
-using System.Xml.Linq;
 
 namespace PokeAPI.DTOs
 {
@@ -67,6 +64,7 @@ namespace PokeAPI.DTOs
                 Accuracy = move.Accuracy,
                 PP = move.PP,
                 isSpecialAttack = move.isSpecialAttack,
+                maxHits = move.maxHits,
             };
         }
 
@@ -82,6 +80,7 @@ namespace PokeAPI.DTOs
                 Accuracy = newMoveDTO.Accuracy,
                 PP = newMoveDTO.PP,
                 isSpecialAttack = newMoveDTO.isSpecialAttack,
+                maxHits = newMoveDTO.maxHits,
             };
         }
     }

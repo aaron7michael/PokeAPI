@@ -9,7 +9,6 @@ namespace PokeAPI.Services
         private readonly IMongoCollection<Pokemon> _pokemonCollection;
         private readonly IMongoCollection<Move> _moveCollection;
         private readonly IMongoCollection<Battle> _battleCollection;
-        private readonly (string, string, string, string, string) validStatusEffects = ("burn", "paralyze", "poison", "sleep", "freeze");
 
         public PokeAPIService(
             IOptions<PokeAPIDatabaseSettings> pokeAPIDatabaseSettings)

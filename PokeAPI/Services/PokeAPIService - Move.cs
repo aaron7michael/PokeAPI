@@ -15,10 +15,13 @@ namespace PokeAPI.Services
             await _moveCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         public async Task<Move?> GetMoveByNameAsync(string name) =>
-            await _moveCollection.Find(x => x.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
+            await _moveCollection.Find(x => name.Equals(x.Name, StringComparison.OrdinalIgnoreCase)).FirstOrDefaultAsync();
 
-        public async Task<Move> UpdateMove(string id, Move moveIn) =>
+        public async Task<Move> UpdateMoveAsync(string id, Move moveIn) =>
             await _moveCollection.FindOneAndReplaceAsync(x => x.Id == id, moveIn);
+
+        public async Task RemoveMoveAsync(string id) =>
+            await _moveCollection.DeleteOneAsync(x => x.Id == id);
 
     }
 }

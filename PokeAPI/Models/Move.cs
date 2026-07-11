@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PokeAPI.Models
 {
-    public class Move
+    public class Move : IValidatableObject
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -21,12 +21,15 @@ namespace PokeAPI.Models
         public int Accuracy { get; set; }
         public int PP { get; set; }
         public bool isSpecialAttack { get; set; }
+        [Range(1, 5)]
+        public int maxHits { get; set; } = 1;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             string[] allowedStatuses = { "burn", "freeze", "paralyze", "poison", "sleep" };
             List<ValidationResult> results = [];
-            if (!PokeType.IsValidType(validationContext.Items["Type"].ToString()))
+
+            if (Type == null || !PokeType.IsValidType(Type.Name))
             {
                 results.Add(new ValidationResult($"Invalid type: {Type}", [nameof(Type)]));
             }

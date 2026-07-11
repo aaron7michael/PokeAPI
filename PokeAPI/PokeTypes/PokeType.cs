@@ -68,8 +68,19 @@ namespace PokeAPI.Models
 
         public PokeType Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
-            context.Reader.ReadStartDocument();
-            return PokeType.GetPokeTypeFromName(context.Reader.ReadString("Name"));
+            var reader = context.Reader;
+            reader.ReadStartDocument();
+            string name = string.Empty;
+            while (reader.ReadBsonType() != BsonType.EndOfDocument)
+            {
+                var elementName = reader.ReadName();
+                if (elementName == "Name")
+                    name = reader.ReadString();
+                else
+                    reader.SkipValue();
+            }
+            reader.ReadEndDocument();
+            return PokeType.GetPokeTypeFromName(name);
         }
 
         public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, PokeType value)

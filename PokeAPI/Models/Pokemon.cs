@@ -5,7 +5,7 @@ using System.Runtime.InteropServices.Swift;
 namespace PokeAPI.Models
 {
     
-    public class Pokemon
+    public class Pokemon : IValidatableObject
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
