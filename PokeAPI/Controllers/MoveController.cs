@@ -41,10 +41,12 @@ namespace PokeAPI.Controllers
             {
                 return BadRequest("Move with that name already exists.");
             }
-            var ctx = new ValidationContext(newMove);
-            var results = new List<ValidationResult>();
-            if (!Validator.TryValidateObject(newMove, ctx, results, validateAllProperties: true))
-                return BadRequest(results);
+            
+            List<ValidationResult>? validationResults = ValidateMove(newMove);
+            if (validationResults != null)
+            {
+                return BadRequest(validationResults);
+            }
 
             await _service.CreateMoveAsync(newMove);
             return CreatedAtAction(nameof(Get), new { name = newMove.Name }, newMove);
@@ -62,18 +64,15 @@ namespace PokeAPI.Controllers
             Move updatedMove = ModelDTOConverter.MoveFromMoveDTO(moveDTO);
             updatedMove.Id = existingMove.Id;
 
-            Move? result = await _service.UpdateMoveAsync(existingMove.Id, updatedMove);
-            if (result == null)
+            List<ValidationResult>? validationResults = ValidateMove(updatedMove);
+            if(validationResults != null)
             {
-                return NotFound();
+                return BadRequest(validationResults);
             }
-            var ctx = new ValidationContext(updatedMove);
-            var results = new List<ValidationResult>();
-            if (!Validator.TryValidateObject(updatedMove, ctx, results, validateAllProperties: true))
-                return BadRequest(results);
 
             return Ok(updatedMove);
         }
+
         [HttpDelete("{name}")]
         public async Task<ActionResult> DeleteMove(string name)
         {
@@ -85,6 +84,15 @@ namespace PokeAPI.Controllers
 
             await _service.RemoveMoveAsync(move.Id);
             return Ok();
+        }
+
+        private List<ValidationResult>? ValidateMove(Move move)
+        {
+            var ctx = new ValidationContext(move);
+            var results = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(move, ctx, results, validateAllProperties: true))
+                return results;
+            return null;
         }
     }
 }

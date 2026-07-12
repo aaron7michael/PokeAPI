@@ -10,8 +10,11 @@ namespace PokeAPI.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
+        [Key]
         public string Name { get; set; }
         [BsonSerializer(typeof(PokeTypeArraySerializer))]
+        [MaxLength(2, ErrorMessage = "A Pokemon must have 1 or 2 types.")]
+        [MinLength(1, ErrorMessage = "A Pokemon must have at least 1 type.")]
         public PokeType[] Types { get; set; }
         public string Status { get; set; } = "healthy";
         public int HP { get; set; }
@@ -20,18 +23,18 @@ namespace PokeAPI.Models
         public int SPAttack { get; set; }
         public int SPDefense { get; set; }
         public int Speed { get; set; }
+        [MaxLength(4, ErrorMessage = "A Pokemon must have 1 to 4 moves.")]
         public Move[] Moves { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             List<ValidationResult> results = [];
-            if (Types.Length > 2 || Types.Length == 0)
+            foreach (PokeType type in Types)
             {
-                results.Add(new ValidationResult("A Pokemon must have 1 or 2 types.", [nameof(Types)]));
-            }
-            if (Moves.Length > 4 || Moves.Length == 0)
-            {
-                results.Add(new ValidationResult("A Pokemon must have 1 to 4 moves.", [nameof(Moves)]));
+                if (type == null || !PokeType.IsValidType(type.Name))
+                {
+                    results.Add(new ValidationResult($"Invalid type: {type}", [nameof(Types)]));
+                }
             }
             return results;
         }

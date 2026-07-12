@@ -13,6 +13,7 @@ namespace PokeAPI.Models
         public string Name { get; set; }
         [BsonSerializer(typeof(PokeTypeSerializer))]
         public PokeType Type { get; set; }
+        [AllowedValues("burn", "freeze", "paralyze", "poison", "sleep", ErrorMessage = "Invalid status effect.")]
         public string? StatusEffect { get; set; } = null!;
         [Range(1, 100)]
         public int? StatusChance { get; set; } = null!;
@@ -26,16 +27,11 @@ namespace PokeAPI.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            string[] allowedStatuses = { "burn", "freeze", "paralyze", "poison", "sleep" };
             List<ValidationResult> results = [];
 
             if (Type == null || !PokeType.IsValidType(Type.Name))
             {
                 results.Add(new ValidationResult($"Invalid type: {Type}", [nameof(Type)]));
-            }
-            if (StatusEffect != null && !allowedStatuses.Contains(StatusEffect))
-            {
-                results.Add(new ValidationResult($"Invalid status effect: {StatusEffect}", [nameof(StatusEffect)]));
             }
             return results;
         }

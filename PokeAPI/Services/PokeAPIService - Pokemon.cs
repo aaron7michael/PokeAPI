@@ -21,28 +21,13 @@ namespace PokeAPI.Services
             return allPokemon.Count > 0 ? allPokemon[index] : null;
         }
 
-        public async Task CreatePokemonAsync(PokemonDTO newPokemonDTO)
-        {
-            Pokemon newPokemon = ModelDTOConverter.PokemonFromPokemonDTO(newPokemonDTO);
-            // check moves exist and throw error if they don't
-            for (int i = 0; i < newPokemonDTO.Moves.Length; i++)
-            {
-                Move? existingMove = await GetMoveByNameAsync(newPokemonDTO.Moves[i]);
-                if (existingMove == null)
-                {
-                    throw new ArgumentException($"Move {newPokemonDTO.Moves[i]} does not exist. Please create the move before adding it to a Pokemon.");
-                }
-                else
-                {
-                    newPokemon.Moves[i] = existingMove;
-                }
-            }
+        public async Task CreatePokemonAsync(Pokemon newPokemon) =>
             await _pokemonCollection.InsertOneAsync(newPokemon);
-        }
-        public async Task UpdateAsync(string id, Pokemon updatedPokemon) =>
+
+        public async Task UpdatePokemonAsync(string id, Pokemon updatedPokemon) =>
             await _pokemonCollection.ReplaceOneAsync(x => x.Id == id, updatedPokemon);
 
-        public async Task RemoveAsync(string id) =>
+        public async Task RemovePokemonAsync(string id) =>
             await _pokemonCollection.DeleteOneAsync(x => x.Id == id);
     }
 }
