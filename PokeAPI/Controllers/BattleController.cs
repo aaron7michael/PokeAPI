@@ -34,14 +34,15 @@ namespace PokeAPI.Controllers
             }
 
             var Battle = new Battle(playerPokemon,opponentPokemon );
-            _service.CreateBattleAsync(Battle);
+            await _service.CreateBattleAsync(Battle);
             
-            throw new NotImplementedException();
+            return CreatedAtAction(nameof(Get), new { id = Battle.Id }, Battle);)
         }
         [HttpPost]
-        public async Task<ActionResult<Battle>> PostMove(Move move)
+        public async Task<ActionResult<Battle>> PostMove(string playerMoveName)
         {
-            throw new NotImplementedException();
+            Move playerMove = await _service.GetMoveAsync(playerMoveName);
+            // Implementation for posting a move
         }
         private PokemonDTO Burn(PokemonDTO pokemon)
         {
