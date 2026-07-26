@@ -5,40 +5,53 @@ namespace PokeAPI.Services
 {
     public static class BattleCalculator
     {
-        public static int CalculateDamage(Move playerMove, PokemonDTO playerPokemon, PokemonDTO opponentPokemon)
+        public static int CalculateDamage(Move move, PokemonDTO activePokemon, PokemonDTO targetPokemon, List<string> messages)
         {
             // all pokemon are assumed to be level 100
             double levelModifier = (2 * 100 + 10) / 250;
 
-            (int playerAttackStat, int opponentDefenseStat) = playerMove.isSpecialAttack ?
-                (playerPokemon.SPAttack, opponentPokemon.SPDefense)
-                : (playerPokemon.Attack, opponentPokemon.Defense);
+            (int playerAttackStat, int opponentDefenseStat) = move.isSpecialAttack ?
+                (activePokemon.SPAttack, targetPokemon.SPDefense)
+                : (activePokemon.Attack, targetPokemon.Defense);
 
-            double statModifier = (playerMove.Attack * playerAttackStat) / opponentDefenseStat;
+            double statModifier = (move.Attack * playerAttackStat) / opponentDefenseStat;
 
             List<double> extraModifiers = [];
             
             // Critial hit modifer
             Random critRandom = new ();
             double critModifier = critRandom.Next(100) <= 6 ? 2.0 : 1.0;
+
+            if (critModifier > 1)
+                messages.Add($"{move} landed a critial hit!");
+
             extraModifiers.Add(critModifier);
 
             // Type modifiers
-            foreach(string type in opponentPokemon.Types)
+            double typeModifer = 1.0;
+            foreach(string type in targetPokemon.Types)
             {
                 PokeType oppType = PokeType.GetPokeTypeFromName(type);
-                if (oppType.Weaknesses.Contains(playerMove.Type.Name))
+                if (oppType.Weaknesses.Contains(move.Type.Name))
                 {
-                    extraModifiers.Add(2.0);
+                    typeModifer *= 2.0;
                 }
-                else if (oppType.Resistances.Contains(playerMove.Type.Name) || type == playerMove.Type.Name)
+                else if (oppType.Resistances.Contains(move.Type.Name) || type == move.Type.Name)
                 {
-                    extraModifiers.Add(0.5);
+                    typeModifer *= 0.5;
                 }
             }
 
+            if (typeModifer > 1)
+                messages.Add($"{move.Name} is super effective!");
+            else
+                messages.Add($"{move.Name} is not very effective...");
+
+
+            extraModifiers.Add(typeModifer);
+
             // Same-type attack bonus (STAB) modifier
-            if (playerPokemon.Types.Contains(playerMove.Type.Name))
+            if (activePokemon.Types.Contains(move.Type.Name))
             {
                 extraModifiers.Add(1.5);
             }
@@ -56,7 +69,7 @@ namespace PokeAPI.Services
                 Random rand = new Random ();
                 int randomModifer = rand.Next(217, 256);
                 calculatedDamage *= randomModifer;
-                return Convert.ToInt32(Math.Floor(calculatedDamage) / 255);
+                return Convert.ToInt32(Math.Floor(calculatedDamage / 255));
             }
             return Convert.ToInt32(Math.Floor(calculatedDamage));
         }

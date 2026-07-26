@@ -14,5 +14,8 @@ namespace PokeAPI.Services
         public async Task CreateBattleAsync(Battle battle) =>
             await _battleCollection.InsertOneAsync(battle);
 
+        public async Task UpdateBattle(Battle battle) =>
+            await _battleCollection.ReplaceOneAsync(b => b.Id == battle.Id, battle);
+
     }
 }
