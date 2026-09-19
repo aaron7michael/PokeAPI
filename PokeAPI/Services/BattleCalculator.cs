@@ -23,7 +23,7 @@ namespace PokeAPI.Services
             double critModifier = critRandom.Next(100) <= 6 ? 2.0 : 1.0;
 
             if (critModifier > 1)
-                messages.Add($"{move} landed a critial hit!");
+                messages.Add($"A critial hit!");
 
             extraModifiers.Add(critModifier);
 
@@ -43,9 +43,9 @@ namespace PokeAPI.Services
             }
 
             if (typeModifer > 1)
-                messages.Add($"{move.Name} is super effective!");
-            else
-                messages.Add($"{move.Name} is not very effective...");
+                messages.Add($"It's super effective!");
+            else if (typeModifer < 1)
+                messages.Add($"It's not very effective...");
 
 
             extraModifiers.Add(typeModifer);

@@ -22,7 +22,7 @@ namespace PokeAPI.Controllers
             }
             return battle;
         }
-        [HttpPost]
+        [HttpPost("RandomBattle")]
         public async Task<ActionResult<Battle>> CreateRandomBattle(string playerPokemonName)
         {
             var playerPokemon = await _service.GetPokemonAsync(playerPokemonName);
@@ -36,10 +36,10 @@ namespace PokeAPI.Controllers
             var Battle = new Battle(playerPokemon, opponentPokemon);
             await _service.CreateBattleAsync(Battle);
 
-            return CreatedAtAction(nameof(Get), new { id = Battle.Id }, Battle);)
+            return CreatedAtAction(nameof(Get), new { id = Battle.Id }, Battle);
         }
-        [HttpPost("{id:length(24)}")]
-        public async Task<ActionResult<Battle>> PostMove(string id, string move)
+        [HttpPost("{id:length(24)}/Turn")]
+        public async Task<ActionResult<Battle>> PostTurn(string id, string move)
         { 
             //TODO: Update battle to track current PP for moves.
 
