@@ -185,11 +185,19 @@ namespace PokeAPI.Models
 
         public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, object value)
         {
-            Serialize(context, args, (PokeType)value);
+            if(value.GetType() == typeof(PokeType[]))
+            {
+                Serialize(context, args, (PokeType[])value);
+            }
+            else
+            {
+                throw new NotSupportedException($"Unsupported type: {value.GetType()}");
+            }
         }
 
         object IBsonSerializer.Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
+            //TODO: Debug deserializing pokemon
             return Deserialize(context, args);
         }
     }

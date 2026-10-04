@@ -13,7 +13,7 @@ namespace PokeAPI.Models
         public string Name { get; set; }
         [BsonSerializer(typeof(PokeTypeSerializer))]
         public PokeType Type { get; set; }
-        [AllowedValues("burn", "freeze", "paralyze", "poison", "sleep", ErrorMessage = "Invalid status effect.")]
+        [AllowedValues("burn", "freeze", "paralyze", "poison", "sleep", null, ErrorMessage = "Invalid status effect.")]
         public string? StatusEffect { get; set; } = null!;
         [Range(1, 100)]
         public int? StatusChance { get; set; } = null!;
