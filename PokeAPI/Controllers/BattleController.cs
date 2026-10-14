@@ -40,86 +40,90 @@ namespace PokeAPI.Controllers
         }
         [HttpPost("{id:length(24)}/Turn")]
         public async Task<ActionResult<Battle>> PostTurn(string id, string move)
-        { 
-            //TODO: Update battle to track current PP for moves.
+        {
+            Battle? battle = await _service.GetBattleAsync(id);
 
-            Battle battle = await _service.GetBattleAsync(id);
-            
             // Request checks
-            if(battle is null)
+            if (battle is null)
             {
                 return NotFound();
             }
             battle.Messages = [];
             if (battle.IsFinished)
             {
-                battle.Messages = [ $"Battle is finished, winner is {(battle.IsPlayerVictorious ? battle.PlayerPokemon.Name : battle.OpponentPokemon.Name)}" ];
+                battle.Messages = [$"Battle is finished, winner is {(battle.IsPlayerVictorious ? battle.PlayerPokemon.Name : battle.OpponentPokemon.Name)}"];
                 return BadRequest(battle);
             }
-            
-            // Player Turn
-            Move playerMove = await _service.GetMoveByNameAsync(move);
-            if(playerMove == null)
-            {
-                return BadRequest($"Move {move} not found");
-            }
-            if (!battle.PlayerMoves.Select(m => m.Name).Contains(move))
+
+            MoveDTO? playerMove = battle.PlayerMoves.FirstOrDefault(m => m.Name == move);
+
+            if (playerMove is null)
             {
                 return BadRequest($"{battle.PlayerPokemon.Name} does not know {move}");
             }
 
-            battle.Messages.Add($"{battle.PlayerPokemon} used {move}!");
-            
-            int opponentDamage = BattleCalculator.CalculateDamage(playerMove, battle.PlayerPokemon, battle.OpponentPokemon, battle.Messages);
-            
-            if(opponentDamage >= battle.OpponentPokemon.HP)
-            {
-                battle.Messages.Add($"{battle.OpponentPokemon.Name} fainted.");
-
-                battle.IsPlayerVictorious = true;
-                battle.IsFinished = true;
-                battle.OpponentPokemon.HP = 0;
-
-                battle.Messages.Add($"{battle.PlayerPokemon.Name} Wins!");
-
-                return Ok(battle);
-            }
-
-            battle.OpponentPokemon.HP -= opponentDamage;
-            battle.PlayerMoves.First(m => m.Name == move).PP -= 1;
-
-            // Opponent Turn
-
-            // Pick a random move and use it
+            // Pick a random move for the opponent
             Random oppMoveRand = new();
             string oppMoveName = battle.OpponentMoves[oppMoveRand.Next(0, 5)].Name;
-            Move oppMove = await _service.GetMoveByNameAsync(oppMoveName);
+            MoveDTO oppMove = battle.OpponentMoves.FirstOrDefault(m => m.Name == oppMoveName)!;
 
-            battle.Messages.Add($"{battle.OpponentPokemon} used {oppMoveName}!");
-
-            int playerDamage = BattleCalculator.CalculateDamage(oppMove, battle.OpponentPokemon, battle.PlayerPokemon, battle.Messages);
-
-            if (playerDamage >= battle.PlayerPokemon.HP)
+            //TODO: Update how moveDTO is passed in so the actual move that is part of the Battle is updated and not a copy of it.
+            if(battle.PlayerPokemon.Speed >= battle.OpponentPokemon.Speed)
             {
-                battle.Messages.Add($"{battle.PlayerPokemon.Name} fainted.");
-
-                battle.IsPlayerVictorious = false;
-                battle.IsFinished = true;
-                battle.PlayerPokemon.HP = 0;
-
-                battle.Messages.Add($"{battle.OpponentPokemon.Name} Wins!");
-
+                PlayerTurn(ref battle, ref playerMove);
+                if (!battle.IsFinished)
+                {
+                    OpponentTurn(ref battle, ref oppMove);
+                }
+            }
+            else
+            {
+                OpponentTurn(ref battle, ref oppMove);
+                if (!battle.IsFinished)
+                {
+                    PlayerTurn(ref battle, ref playerMove);
+                }
+            }
+            if (battle.IsFinished)
+            {
+                await _service.UpdateBattle(battle);
                 return Ok(battle);
             }
-
-            battle.PlayerPokemon.HP -= playerDamage;
-            battle.OpponentMoves.First(m => m.Name == oppMoveName).PP -= 1;
 
             await _service.UpdateBattle(battle);
             return Ok(battle);
-            
+
         }
-        
+
+        private void PlayerTurn(ref Battle battle, ref MoveDTO playerMove)
+        {
+            //TODO: Check if the move has enough PP
+            playerMove.PP -= 1;
+            battle.Messages.Add($"{battle.PlayerPokemon} used {playerMove.Name}!");
+            int opponentDamage = BattleCalculator.CalculateDamage(playerMove, battle.PlayerPokemon, battle.OpponentPokemon, battle.Messages);
+
+            if (opponentDamage >= battle.OpponentPokemon.HP)
+            {
+                battle.FinishBattle(true);
+            }
+
+            battle.OpponentPokemon.HP -= opponentDamage;
+        }
+
+        private void OpponentTurn(ref Battle battle, ref MoveDTO opponentMove)
+        {
+            //TODO: Check if the move has enough PP
+            opponentMove.PP -= 1;
+            battle.Messages.Add($"{battle.OpponentPokemon} used {opponentMove.Name}!");
+            int playerDamage = BattleCalculator.CalculateDamage(opponentMove, battle.OpponentPokemon, battle.PlayerPokemon, battle.Messages);
+
+            if (playerDamage >= battle.PlayerPokemon.HP)
+            {
+                battle.FinishBattle(false);
+            }
+
+            battle.PlayerPokemon.HP -= playerDamage;
+        }
     }
 }
 

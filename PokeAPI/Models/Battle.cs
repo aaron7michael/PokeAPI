@@ -26,5 +26,24 @@ namespace PokeAPI.Models
             OpponentMoves = [.. opponentPokemon.Moves.Select(ModelDTOConverter.MoveDTOFromMove)];
             Messages = [];
         }
+
+        public void FinishBattle(bool isPlayerVictorious)
+        {
+            IsFinished = true;
+            IsPlayerVictorious = isPlayerVictorious;
+            
+            if(isPlayerVictorious)
+            {
+                Messages.Add($"{OpponentPokemon.Name} fainted.");
+                Messages.Add($"{PlayerPokemon.Name} Wins!");
+                OpponentPokemon.HP = 0;
+            }
+            else
+            {
+                Messages.Add($"{PlayerPokemon.Name} fainted.");
+                Messages.Add($"{OpponentPokemon.Name} Wins!");
+                PlayerPokemon.HP = 0;
+            }
+        }
     }
 }

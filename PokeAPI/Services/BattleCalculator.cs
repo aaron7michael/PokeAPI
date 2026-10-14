@@ -5,7 +5,7 @@ namespace PokeAPI.Services
 {
     public static class BattleCalculator
     {
-        public static int CalculateDamage(Move move, PokemonDTO activePokemon, PokemonDTO targetPokemon, List<string> messages)
+        public static int CalculateDamage(MoveDTO move, PokemonDTO activePokemon, PokemonDTO targetPokemon, List<string> messages)
         {
             // all pokemon are assumed to be level 100
             double levelModifier = (2 * 100 + 10) / 250;
@@ -32,11 +32,11 @@ namespace PokeAPI.Services
             foreach(string type in targetPokemon.Types)
             {
                 PokeType oppType = PokeType.GetPokeTypeFromName(type);
-                if (oppType.Weaknesses.Contains(move.Type.Name))
+                if (oppType.Weaknesses.Contains(move.Type))
                 {
                     typeModifer *= 2.0;
                 }
-                else if (oppType.Resistances.Contains(move.Type.Name) || type == move.Type.Name)
+                else if (oppType.Resistances.Contains(move.Type) || type == move.Type)
                 {
                     typeModifer *= 0.5;
                 }
@@ -51,7 +51,7 @@ namespace PokeAPI.Services
             extraModifiers.Add(typeModifer);
 
             // Same-type attack bonus (STAB) modifier
-            if (activePokemon.Types.Contains(move.Type.Name))
+            if (activePokemon.Types.Contains(move.Type))
             {
                 extraModifiers.Add(1.5);
             }
